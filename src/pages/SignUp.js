@@ -75,7 +75,7 @@ export default class SignUp extends Component {
                         <Col md="5" className="h-100 d-flex align-items-start flex-column" id="login-right-banner">
                             <div className="mb-auto m-5">
                                 <h1>Sign Up</h1>
-                                <p>Hello! Let's get started!</p>
+                                <p>Hello! Let's get started by making your account!</p>
                             </div>
                             <Form className="mb-auto w-100 p-5" onSubmit={this.handleSubmit && this.postCredentials}>
                                 <FormGroup>
