@@ -124,6 +124,7 @@ export default class SignUp extends Component {
                                     <Input onChange={this.handleEmail}
                                         className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
                                         name = "email" 
+                                        type='email'
                                         placeholder ="Email"
                                         required
                                     />
