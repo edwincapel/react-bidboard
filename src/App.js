@@ -1,27 +1,53 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import './App.scss';
+import Home from './pages/Home'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
+import {Route, Switch} from 'react-router-dom'
 
 class App extends Component {
-  render() {
+  render(){
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <Fragment>
+        <div className = "content">
+          <Switch>
+            <Route path="/login" 
+              component = { props => 
+                      {
+                        return (
+                          <Login 
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />  
+            <Route path="/signup" 
+              component = { props => 
+                      {
+                        return (
+                          <SignUp 
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />         
+            <Route path="/" 
+              component = { props => 
+                      {
+                        return (
+                          <Home 
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />
+          </Switch>
+        </div>
+      </Fragment>
+    )
   }
 }
 
