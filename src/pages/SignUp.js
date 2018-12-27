@@ -14,6 +14,9 @@ export default class SignUp extends Component {
     state={
         email:'',
         password:'',
+        firstname:'',
+        lastname:'',
+        companyname:'',
         loggedin:false,
         loading:false,
     }
@@ -42,6 +45,33 @@ export default class SignUp extends Component {
         
         this.setState({
             email : value
+        })
+    }
+
+    handleFirstName = (event) =>{
+        const target = event.target
+        const value = target.value
+        
+        this.setState({
+            firstname : value
+        })
+    }
+
+    handleLastName = (event) =>{
+        const target = event.target
+        const value = target.value
+        
+        this.setState({
+            lastname : value
+        })
+    }
+
+    handleCompanyName = (event) =>{
+        const target = event.target
+        const value = target.value
+        
+        this.setState({
+            companyname : value
         })
     }
 
@@ -79,17 +109,35 @@ export default class SignUp extends Component {
                             </div>
                             <Form className="mb-auto w-100 p-5" onSubmit={this.handleSubmit && this.postCredentials}>
                                 <FormGroup>
+                                    <Input onChange={this.handleFirstName}
+                                        className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
+                                        name = "firstname" 
+                                        placeholder ="First Name"
+                                        required
+                                    />
+                                    <Input onChange={this.handleLastName}
+                                        className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
+                                        name = "lastname" 
+                                        placeholder ="Last Name"
+                                        required
+                                    />
                                     <Input onChange={this.handleEmail}
                                         className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
                                         name = "email" 
-                                        placeholder ="email"
+                                        placeholder ="Email"
+                                        required
+                                    />
+                                    <Input onChange={this.handleCompanyName}
+                                        className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
+                                        name = "companyname" 
+                                        placeholder ="Company Name"
                                         required
                                     />
                                     <Input onChange = {this.handlePassword}
                                         type='password'
                                         className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
                                         name = "password" 
-                                        placeholder ="password"
+                                        placeholder ="Password"
                                         required
                                     />
                                     <div className="d-flex flex-row mt-3 ml-1">
