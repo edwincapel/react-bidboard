@@ -18,23 +18,23 @@ export default class SignUp extends Component {
         loading:false,
     }
 
-    postCredentials = (e) =>{
-        e.preventDefault()
-        axios.post('https://insta-oct18.nextacademy.com/api/v1/login',{
-            email:this.state.email,
-            password:this.state.password
-        })
-        .then(function (response) {
-            const {data} = response;
-            const {message, auth_token} = data
+    // postCredentials = (e) =>{
+    //     e.preventDefault()
+    //     axios.post('https://insta-oct18.nextacademy.com/api/v1/login',{
+    //         email:this.state.email,
+    //         password:this.state.password
+    //     })
+    //     .then(function (response) {
+    //         const {data} = response;
+    //         const {message, auth_token} = data
             
-        })
-        .catch(function (error) {
-            alert('Failed sign in, please try again');
-        });
-        this.setState({loggedin:true,loading:true})
+    //     })
+    //     .catch(function (error) {
+    //         alert('Failed sign in, please try again');
+    //     });
+    //     this.setState({loggedin:true,loading:true})
         
-    }
+    // }
 
     handleEmail = (event) =>{
         const target = event.target
