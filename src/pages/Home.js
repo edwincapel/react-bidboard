@@ -10,6 +10,7 @@ export default class Home extends Component {
 
                 <br/>
                 <br/>
+                
                 <Link to={'/login'}>
                     <p>Login</p>
                 </Link>
