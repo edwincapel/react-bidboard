@@ -17,32 +17,46 @@ export default class SignUp extends Component {
         firstname:'',
         lastname:'',
         companyname:'',
+        message:'',
         loggedin:false,
         loading:false,
+        hasError:false,
+        errors:[],
     }
 
-    // postCredentials = (e) =>{
-    //     e.preventDefault()
-    //     axios.post('https://insta-oct18.nextacademy.com/api/v1/login',{
-    //         email:this.state.email,
-    //         password:this.state.password
-    //     })
-    //     .then(function (response) {
-    //         const {data} = response;
-    //         const {message, auth_token} = data
+    postCredentials = (e) =>{
+        e.preventDefault()
+        axios({
+            method: 'post',
+            url: 'http://127.0.0.1:5000/api/v1/users/create',
+            headers: {
+                'content-type': 'application/json',
+            },
+            data: {
+                first_name:this.state.firstname,
+                last_name:this.state.lastname,
+                email:this.state.email,
+                company_name:this.state.companyname,
+                password:this.state.password,
+            }
+          })
+        .then( response => {
+            console.log(response)
+            const {data} = response;
+            const {message, auth_token} = data
+            localStorage.setItem('auth_token',auth_token)
+            this.setState({loggedin:true,message:message})
+        })
+        .catch(catcherror => {
+            const {response} = catcherror
             
-    //     })
-    //     .catch(function (error) {
-    //         alert('Failed sign in, please try again');
-    //     });
-    //     this.setState({loggedin:true,loading:true})
-        
-    // }
+            this.setState({hasError: true,errors: response.data.message })
+        });    
+    }
 
     handleEmail = (event) =>{
         const target = event.target
         const value = target.value
-        
         this.setState({
             email : value
         })
@@ -79,7 +93,6 @@ export default class SignUp extends Component {
         const target = event.target
         const value = target.value
         
-        
         this.setState({
             password : value
         })
@@ -91,8 +104,6 @@ export default class SignUp extends Component {
     }
 
     render(){
-        console.log(this.state.email)
-        console.log(this.state.password)
         return(
             <section className="h-100" id="login-page">
                 <Container fluid className="h-100">
@@ -109,7 +120,7 @@ export default class SignUp extends Component {
                             </div>
                             <Form className="mb-auto w-100 p-5" onSubmit={this.handleSubmit && this.postCredentials}>
                                 <FormGroup>
-                                    <Input onChange={this.handleFirstName}
+                                    <Input onInput={this.handleFirstName}
                                         className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
                                         name = "firstname" 
                                         placeholder ="First Name"
@@ -155,6 +166,13 @@ export default class SignUp extends Component {
                                     </div>
                                 </FormGroup>
                             </Form>
+                            <div>
+                                <h6>
+                                {this.state.hasError === true ? this.state.errors.map((errors,index) =>
+                                <li key = {index}>{errors}</li>) 
+                                : this.state.message}
+                                </h6>
+                            </div>
                             <div className="mt-auto mx-auto mb-3">
                                 <small className="text-muted">
                                     Already have an account? Login &nbsp;
