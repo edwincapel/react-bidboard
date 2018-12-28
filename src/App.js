@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import {Route, Switch} from 'react-router-dom'
-
 class App extends Component {
   render(){
     return (
@@ -21,7 +20,10 @@ class App extends Component {
                         )
                       }
               }
-            />  
+            />
+            {/* <Route path="/upload" 
+              component ={ProfilePage}
+            />   */}
             <Route path="/signup" 
               component = { props => 
                       {
