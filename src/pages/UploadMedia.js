@@ -34,7 +34,7 @@ export default class SignUp extends Component {
             }
           })
         .then( response => {
-            console.log(response)
+            // console.log(response)
             const {data} = response;
             const {message, auth_token} = data
             sessionStorage.setItem('jwt',auth_token)

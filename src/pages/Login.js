@@ -16,7 +16,6 @@ export default class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            currentUser: "",
             emailValue: "",
             passwordValue: "",
             isLoading: false
@@ -32,13 +31,12 @@ export default class Login extends Component {
                 password: this.state.passwordValue
               })
               .then(response => {
-                console.log(response);
                 const jwt = response.data.auth_token
+                const user = response.data.user
                 localStorage.setItem('jwt', jwt)
-                
+                localStorage.setItem('currentUser',JSON.stringify(user))
                 this.setState({
                     isLoading: false,
-                    currentUser: response.config.data.email,
                 })
               })
               .catch(error => {
