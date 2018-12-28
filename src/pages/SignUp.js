@@ -18,7 +18,6 @@ export default class SignUp extends Component {
         lastname:'',
         companyname:'',
         message:'',
-        loggedin:false,
         loading:false,
         hasError:false,
         errors:[],
@@ -45,7 +44,7 @@ export default class SignUp extends Component {
             const {data} = response;
             const {message, auth_token} = data
             sessionStorage.setItem('jwt',auth_token)
-            this.setState({loggedin:true,message:message})
+            this.setState({message:message})
         })
         .catch(catcherror => {
             const {response} = catcherror
@@ -104,7 +103,7 @@ export default class SignUp extends Component {
     }
 
     render(){
-        if(this.state.loggedin === true){
+        if(sessionStorage.jwt){
             return <Redirect to= '/'/>
         }
         else{ 
