@@ -44,7 +44,7 @@ export default class SignUp extends Component {
             console.log(response)
             const {data} = response;
             const {message, auth_token} = data
-            sessionStorage.setItem('auth_token',auth_token)
+            sessionStorage.setItem('jwt',auth_token)
             this.setState({loggedin:true,message:message})
         })
         .catch(catcherror => {
@@ -105,8 +105,9 @@ export default class SignUp extends Component {
 
     render(){
         if(this.state.loggedin === true){
-            return <Redirect to= '/'></Redirect>
-        } 
+            return <Redirect to= '/'/>
+        }
+        else{ 
         return(
             <section className="h-100" id="login-page">
                 <Container fluid className="h-100">
@@ -189,7 +190,7 @@ export default class SignUp extends Component {
                 </Container>
             </section>
         )
-        
+                                }
     }
     }
 
