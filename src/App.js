@@ -4,7 +4,15 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import {Route, Switch} from 'react-router-dom'
+
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+  }
+
   render(){
     return (
       <Fragment>
@@ -40,7 +48,7 @@ class App extends Component {
                       {
                         return (
                           <Home 
-                            {...props}
+                          {...props}
                           />
                         )
                       }
