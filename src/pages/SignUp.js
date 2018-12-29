@@ -11,16 +11,19 @@ const leftBg = {
 }
 
 export default class SignUp extends Component {
-    state={
-        email:'',
-        password:'',
-        firstname:'',
-        lastname:'',
-        companyname:'',
-        message:'',
-        loading:false,
-        hasError:false,
-        errors:[],
+    constructor(props) {
+        super(props)
+        this.state = {
+            email:'',
+            password:'',
+            firstname:'',
+            lastname:'',
+            companyname:'',
+            message:'',
+            loading:false,
+            hasError:false,
+            errors:[],
+        }
     }
 
     postCredentials = (e) =>{
@@ -40,10 +43,13 @@ export default class SignUp extends Component {
             }
           })
         .then( response => {
-            // console.log(response)
             const {data} = response;
             const {message, auth_token} = data
-            sessionStorage.setItem('jwt',auth_token)
+            const user = response.data.user
+
+            localStorage.setItem('jwt',auth_token)
+            localStorage.setItem('currentUser',JSON.stringify(user))
+
             this.setState({
                 message:message
             })
@@ -58,6 +64,7 @@ export default class SignUp extends Component {
     handleEmail = (event) =>{
         const target = event.target
         const value = target.value
+
         this.setState({
             email : value
         })
@@ -97,7 +104,6 @@ export default class SignUp extends Component {
         this.setState({
             password : value
         })
-        
     }
 
     handleSubmit = (e) => {
