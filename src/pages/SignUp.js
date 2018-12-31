@@ -2,13 +2,8 @@ import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import axios from 'axios';
 import {Container,Col,Row,Form,FormGroup,Input,Button} from 'reactstrap'
-import Background from '../images/login.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVrCardboard } from '@fortawesome/free-solid-svg-icons'
-
-const leftBg = {
-    backgroundImage: `url(${Background})`,
-}
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -119,7 +114,7 @@ export default class SignUp extends Component {
                 <section className="h-100" id="login-page">
                     <Container fluid className="h-100">
                         <Row className="h-100">
-                            <Col md="7" className="h-100 d-none d-md-block" id="login-left-banner" style={leftBg}>
+                            <Col md="7" className="h-100 d-none d-md-block" id="login-left-banner">
                                 <div className="mb-auto mt-3">
                                     <h3>LOGO</h3>
                                 </div>

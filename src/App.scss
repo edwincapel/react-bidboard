@@ -8,6 +8,7 @@
 // 4.  Sign-in page
 // 5.  Sign-up page
 // 6.  Show Image page
+// 7.  Dashboard
 //
 /////////////////////////////////////////////////////////// */
 
@@ -65,6 +66,7 @@ html,body,#root,.content{
       background-repeat: no-repeat;
       /* background-color: #232323; */
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      background: linear-gradient(87deg,#5e72e4 0,#825ee4 100%)!important;
   }
   
   #google-button{
@@ -80,4 +82,79 @@ html,body,#root,.content{
   /* ///////////////////////////////////////////////////////////
   //////// 6. Edit Profile Page    ////////////////////////////
   //////////////////////////////////////////////////////////// */
+
+   /* /////////////////////////////////////////////////////////////
+  //////// 7. Dashboard    ///////////////////////////////////////
+  //////////////////////////////////////////////////////////// */
+  
+  #dashboard{
+      .bg-gradient-primary{
+        background: linear-gradient(87deg,#5e72e4 0,#825ee4 100%)!important;
+      }
+      .bottom-bg{
+          background-color: #f8f9fe;
+      }
+      .vertical-navbar{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+
+      .feather {
+        width: 16px;
+        height: 16px;
+        vertical-align: text-bottom;
+      }
+      
+      /*
+       * Sidebar
+       */
+      
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100; /* Behind the navbar */
+        padding: 48px 0 0; /* Height of navbar */
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+      }
+      
+      .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+      }
+      
+      @supports ((position: -webkit-sticky) or (position: sticky)) {
+        .sidebar-sticky {
+          position: -webkit-sticky;
+          position: sticky;
+        }
+      }
+      
+      .sidebar .nav-link {
+        font-weight: 500;
+        color: #333;
+      }
+      
+      .sidebar .nav-link .feather {
+        margin-right: 4px;
+        color: #999;
+      }
+      
+      .sidebar .nav-link.active {
+        color: #007bff;
+      }
+      
+      .sidebar .nav-link:hover .feather,
+      .sidebar .nav-link.active .feather {
+        color: inherit;
+      }
+      
+  }
+  
+
+  
   

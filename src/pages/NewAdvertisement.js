@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {Container,Row} from 'reactstrap'
 import SideNavbar from '../components/SideNavbar'
-import Dashboard from '../components/Dashboard';
+import NewAd from '../containers/NewAd';
 import {Redirect} from 'react-router-dom'
 
-export default class Home extends Component {
+export default class NewAdvertisement extends Component {
 
     constructor(props) {
         super(props)
@@ -13,7 +13,7 @@ export default class Home extends Component {
         }
     }
 
-    logout = (e) => {
+    logout = () => {
         localStorage.removeItem('jwt')
         localStorage.removeItem('currentUser')
         this.forceUpdate()
@@ -23,13 +23,12 @@ export default class Home extends Component {
         const {currentUser} = this.state
         
         if (localStorage.getItem('jwt')) {
-            return(    
-                // Dashboard SECTION
+            return(
                 <section className="h-100" id="dashboard"> 
                     <Container fluid>
                         <Row>
                             <SideNavbar logout={this.logout}/>
-                            <Dashboard/>
+                            <NewAd/>
                         </Row>
                     </Container>
                 </section>
@@ -38,7 +37,6 @@ export default class Home extends Component {
         else{
             return <Redirect to='/login'/>;
         }
-
     }
 }
 
