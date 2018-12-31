@@ -3,6 +3,7 @@ import './App.scss';
 import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
+import NewAdvertisement from './pages/NewAdvertisement';
 import {Route, Switch} from 'react-router-dom'
 
 class App extends Component {
@@ -42,7 +43,18 @@ class App extends Component {
                         )
                       }
               }
-            />         
+            />    
+            <Route path="/new" 
+              component = { props => 
+                      {
+                        return (
+                          <NewAdvertisement 
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />       
             <Route path="/" 
               component = { props => 
                       {
