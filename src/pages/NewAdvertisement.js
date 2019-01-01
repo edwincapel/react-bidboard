@@ -25,8 +25,8 @@ export default class NewAdvertisement extends Component {
         if (localStorage.getItem('jwt')) {
             return(
                 <section className="h-100" id="dashboard"> 
-                    <Container fluid>
-                        <Row>
+                    <Container fluid className="h-100">
+                        <Row className="h-100">
                             <SideNavbar logout={this.logout}/>
                             <NewAd/>
                         </Row>
