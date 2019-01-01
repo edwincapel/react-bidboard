@@ -29,7 +29,7 @@ export default class Home extends Component {
                     <Container fluid>
                         <Row>
                             <SideNavbar logout={this.logout}/>
-                            <Dashboard/>
+                            <Dashboard />
                         </Row>
                     </Container>
                 </section>
