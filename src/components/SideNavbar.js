@@ -36,6 +36,13 @@ export default class SideNavbar extends Component {
                 </span>
               </Link>
             </NavItem>
+            <NavItem>
+              <Link to={'/billboards'} className="nav-link">
+                <span data-feather="home"></span>
+                  Billboards<span className="sr-only">(current)
+                </span>
+              </Link>
+            </NavItem>
             <h6 className="d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Saved reports</span>
             <a className="d-flex align-items-center text-muted" href="#">

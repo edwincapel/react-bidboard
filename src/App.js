@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import NewAdvertisement from './pages/NewAdvertisement';
 import {Route, Switch} from 'react-router-dom'
+import Billboards from './components/Billboards';
 
 class App extends Component {
 
@@ -54,7 +55,18 @@ class App extends Component {
                         )
                       }
               }
-            />       
+            />
+            <Route path="/billboards" 
+              component = { props => 
+                      {
+                        return (
+                          <Billboards
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />             
             <Route path="/" 
               component = { props => 
                       {
