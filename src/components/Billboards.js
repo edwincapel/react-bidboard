@@ -42,6 +42,7 @@ export default class Billboards extends Component {
                     </Container>
                 </section>
                 <section id='billboardcontainer'>
+                
                 {
                     this.state.billboards.map((billboard,index)=>
                     <div onClick={this.onClickHandler} className='billboard' id={index} key={index}>
@@ -59,6 +60,8 @@ export default class Billboards extends Component {
                     </div>
                     )
                 }
+                
+                
                 </section>
                 </div>
             )

@@ -57,6 +57,17 @@ class App extends Component {
                       }
               }
             />
+            <Route path="/billboards" 
+              component = { props => 
+                      {
+                        return (
+                          <Billboards 
+                            {...props}
+                          />
+                        )
+                      }
+              }
+            />
             <Route path="/bid" 
               component = { props => 
                       {
