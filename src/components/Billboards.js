@@ -48,8 +48,8 @@ export default class Billboards extends Component {
                         <small>
                         Location : {billboard.location} <br/>
                         Price : 
-                        {this.state.time[5] === 'A' && this.state.time[0] >= 7 || this.state.time <= 10 ||
-                        this.state.time[5] === 'P' && this.state.time[0] >= 4 || this.state.time <= 8
+                        {this.state.time[5] === 'A' && this.state.time[0] >= 7 && this.state.time[0] <= 9 ||
+                        this.state.time[5] === 'P' && this.state.time[0] >= 4 && this.state.time[0] <= 7
                         ?  billboard.base_price * 1.25 
                         : billboard.base_price
                         }
