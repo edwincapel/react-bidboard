@@ -17,7 +17,7 @@ export default class NewAd extends React.Component {
         return(
             <Col md="10" className="ml-sm-auto p-0">
                 <div className="d-flex h-100 justify-content-between flex-wrap">
-                    <div className="w-100 h-100 d-flex justify-content-center align-items-center p-5">
+                    <div className="w-100 h-100 d-flex justify-content-center align-items-center">
                         <DropFile/>
                     </div>
                 </div>
