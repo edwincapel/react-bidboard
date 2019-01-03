@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
+import "react-datepicker/dist/react-datepicker.css";
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from 'react-router-dom'
 
