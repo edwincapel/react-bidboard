@@ -18,6 +18,7 @@ export default class SelectedBillboard extends Component {
             currentUser: JSON.parse(localStorage.getItem('currentUser')),
             amount: null,
             medium:null,
+            total:null,
             startDate: new Date(),
             selected_campaign: null,
         }
@@ -34,11 +35,16 @@ export default class SelectedBillboard extends Component {
           })
         .then(({data}) => {
             console.log(data.all_ads);
+            let price = this.props.selected.base_price
+            if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours()<= 9)||(this.state.startDate.getHours() >= 16 && this.state.startDate.getHours()<= 21)) {
+                price = price *1.25
+            }
             
           this.setState(
             {
                 medium: data.all_ads,
-                selected_campaign: data.all_ads[0]
+                selected_campaign: data.all_ads[0],
+                total: price
             })
       
         })
@@ -63,7 +69,7 @@ export default class SelectedBillboard extends Component {
                 user_id: this.state.currentUser.id,
                 billboard_id: this.props.selected.id,
                 campaign_id: this.state.selected_campaign.id,
-                date: this.state.startDate
+                date: (((this.state.startDate).getTime())/1000)
             }
           })
         .then( response => {
@@ -81,8 +87,13 @@ export default class SelectedBillboard extends Component {
     }
 
     handleChange = (date) => {
+        let price = this.props.selected.base_price
+        if ((date.getHours() >= 7 && date.getHours()<= 9)||(date.getHours() >= 16 && date.getHours()<= 21)) {
+            price = price *1.25
+        }
         this.setState({
-          startDate: date
+          startDate: date,
+          total: price
         });
     }
 
@@ -94,7 +105,7 @@ export default class SelectedBillboard extends Component {
 
     render(){
         const {selected,handleSelected} = this.props
-        const {medium} = this.state
+        const {medium,total} = this.state
         
         if (!medium) return <h1>Wait lah</h1>
         return(
@@ -124,6 +135,9 @@ export default class SelectedBillboard extends Component {
                             ]}
                             dateFormat="MMMM d, yyyy h:mm aa"
                         />
+                        <p>Rate for this hour</p>
+                        <p>MYR {total}</p>
+                        
                         <div className="d-flex flex-row mt-3 ml-1">
                             <Button className="btn btn-dark" value="Submit">
                                 Place Bid

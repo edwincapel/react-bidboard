@@ -32,9 +32,6 @@ class App extends Component {
                       }
               }
             />
-            {/* <Route path="/upload" 
-              component ={ProfilePage}
-            />   */}
             <Route path="/signup" 
               component = { props => 
                       {
@@ -51,17 +48,6 @@ class App extends Component {
                       {
                         return (
                           <NewAdvertisement 
-                            {...props}
-                          />
-                        )
-                      }
-              }
-            />
-            <Route path="/billboards" 
-              component = { props => 
-                      {
-                        return (
-                          <Billboards 
                             {...props}
                           />
                         )
