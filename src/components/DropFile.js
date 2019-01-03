@@ -21,7 +21,10 @@ export default class DropFile extends Component {
             imgSrc: null,
             fileName: "",
             fileSize: "",
-            currentUser: JSON.parse(localStorage.getItem('currentUser'))
+            currentUser: JSON.parse(localStorage.getItem('currentUser')),
+            illegal:'',
+            nsfw:'',
+            moderation:'',
         }
       }
 
@@ -53,7 +56,8 @@ export default class DropFile extends Component {
             data: formData
           })
         .then( response => {
-            console.log(response.data.medium.concepts)
+            console.log(response)
+            // console.log(response.data.medium.concepts)
             if(response.status === 201){
                 console.log("success");
                 this.setState({
@@ -61,12 +65,12 @@ export default class DropFile extends Component {
                     success: true,
                     medium: response.data.medium,
                     generalConcepts: response.data.medium.concepts.general,
-                    // illegal: response.data.medium.concepts.illegal,
-                    // moderation: response.data.medium.concepts.moderation,
-                    // "nsfw-v1.0": response.data.medium.concepts[3]
+                    illegal: response.data.medium.concepts.illegal,
+                    moderation: response.data.medium.concepts.moderation,
+                    nsfw: response.data.medium.concepts[3]
                 })
             }
-            console.log(response.data.medium.concepts.general);
+            // console.log(response.data.medium.concepts.general);
             
         })
         .catch(error => {
@@ -106,7 +110,6 @@ export default class DropFile extends Component {
 
     render() {
         const {imgSrc,fileName,fileSize,success,isLoading,generalConcepts} = this.state
-        
         if (this.state.file.length > 0 && success){
             return(
                 <div id="success-preview" className="w-100 h-100 p-5">
@@ -114,14 +117,19 @@ export default class DropFile extends Component {
                         <Row>
                             <Col md="6" className="h-100 p-0">
                                 {imgSrc !== null ? <img src={imgSrc} className="w-100 h-25 " alt=""/> : ''}
+                                {this.state.moderation.safe <= 0.4 ? 'The image you uploaded is suggestive of something illegal': ''}
+                                {/* {this.state.nsfw.sfw <= 0.5 ? 'The image you uploaded is suggestive of something illegal': ''} */}
+                                
                             </Col>
                             <Col md="6" className="h-100 p-0" style={{overflow: 'scroll'}}>
+                                <div id='generalconceptdiv'>
                                 {/* progress bar here  loop through general concepts object*/}
                                 {
                                     Object.entries(generalConcepts).map((item, i) => (
-                                        <ProgressBar key={i} item={item} />
+                                        <ProgressBar class='generalconcepts' key={i} item={item} />
                                     ))
                                 }
+                                </div>
                             </Col>
                         </Row>
                     </Container>
@@ -166,6 +174,7 @@ export default class DropFile extends Component {
                                         placeholder ="Campaign Name"
                                         value={this.state.campaign_name}
                                         onChange={this.handleCampaignNameChange}
+                                        required
                                     />
                                     <Input 
                                         className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
@@ -173,10 +182,11 @@ export default class DropFile extends Component {
                                         placeholder ="description"
                                         value={this.state.description}
                                         onChange={this.handleDescriptionChange}
+                                        required
                                     />
                                     <div className="d-flex flex-row mt-3 ml-1">
                                         <Button className="btn btn-dark" value="Submit">
-                                            Sumbit
+                                            Submit
                                         </Button>
                                         <Button className="btn btn-danger ml-1" onClick={this.onCancel}>
                                             Cancel
