@@ -46,6 +46,8 @@ export default class Bid extends Component {
     }
 
     handleSelected = (billboard) => {
+        console.log(billboard);
+        
         this.setState({
             selected: billboard
         })
@@ -65,11 +67,11 @@ export default class Bid extends Component {
                                 <Col md={{ size: 4, offset: 2}} className="bil-list p-2" style={fixed}>
                                 {
                                         billboards.map((item, i) => (
-                                            <BidItem key={i} billboard={item} handleSelected={this.handleSelected} />
+                                            <BidItem key={i} billboard={item} handleSelected={this.handleSelected}/>
                                         ))
                                 }
                                 </Col>
-                                <Col md="6" className="w-100 h-100 p-2">
+                                <Col md="6" className="w-100 h-100 p-0">
                                     <SelectedBillboard selected={selected}/>
                                 </Col>
                                 

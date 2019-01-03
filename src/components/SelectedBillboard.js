@@ -109,12 +109,11 @@ export default class SelectedBillboard extends Component {
         
         if (!medium) return <h1>Wait lah</h1>
         return(
-            <div className="w-100 h-100 border-bottom p-0" onClick={handleSelected}>
-                <p>{selected.owner}</p>
-                <p>{selected.id}</p>
+            <div className="w-100 h-100 border-bottom p-0 active d-flex justify-content-center align-items-center" onClick={handleSelected}>
                 
-                <Form className="w-100 p-5" onSubmit={this.handleSubmit}>
+                <Form className="w-75 p-3" onSubmit={this.handleSubmit}>
                     <FormGroup>
+                        <h4>{selected.location}</h4>
                         <Label for="exampleSelect">Choose Campaign</Label>
                         <Input type="select" name="select" id="exampleSelect" onChange={this.handleCampaign}>
                         {
@@ -123,6 +122,10 @@ export default class SelectedBillboard extends Component {
                             ))
                         }
                         </Input>
+                        <div className="w-100 mt-3 mb-3">
+                            <img src={this.state.selected_campaign.medium_url} className="w-100"  alt=""/>
+                        </div>
+                        <Label for="datepicker">Select Date</Label>
                         <DatePicker
                             selected={this.state.startDate}
                             onChange={this.handleChange}
@@ -135,11 +138,13 @@ export default class SelectedBillboard extends Component {
                             ]}
                             dateFormat="MMMM d, yyyy h:mm aa"
                         />
-                        <p>Rate for this hour</p>
-                        <p>MYR {total}</p>
+                        <div className="w-100 d-flex mt-3 border-top border-bottom p-3">
+                            <p className="mr-auto">Rate for this hour</p>
+                            <p className="ml-auto">MYR {total}</p>
+                        </div>
                         
-                        <div className="d-flex flex-row mt-3 ml-1">
-                            <Button className="btn btn-dark" value="Submit">
+                        <div className="d-flex flex-row mt-3 ml-1 w-100">
+                            <Button className="btn btn-dark ml-auto" value="Submit">
                                 Place Bid
                             </Button>
                         </div>

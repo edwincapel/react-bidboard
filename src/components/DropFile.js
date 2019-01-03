@@ -6,6 +6,7 @@ import Loader from '../images/loader.gif'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons'
 import ProgressBar from './ProgressBar';
+import {Link} from 'react-router-dom'
 
 export default class DropFile extends Component {
     constructor() {
@@ -109,20 +110,17 @@ export default class DropFile extends Component {
       
 
     render() {
-        const {imgSrc,fileName,fileSize,success,isLoading,generalConcepts} = this.state
+        const {imgSrc,fileName,fileSize,success,isLoading,generalConcepts,medium} = this.state
         if (this.state.file.length > 0 && success){
             return(
                 <div id="success-preview" className="w-100 h-100 p-5">
                     <Container className="w-100 h-100" fluid>
-                        <Row>
-                            <Col md="6" className="h-100 p-0">
-                                {imgSrc !== null ? <img src={imgSrc} className="w-100 h-25 " alt=""/> : ''}
-                                {this.state.moderation.safe <= 0.4 ? 'The image you uploaded is suggestive of something illegal': ''}
-                                {/* {this.state.nsfw.sfw <= 0.5 ? 'The image you uploaded is suggestive of something illegal': ''} */}
+                        <Row className="h-100">
+                            <Col md="3" className="h-100 p-0 shadow-me">
                                 
-                            </Col>
-                            <Col md="6" className="h-100 p-0" style={{overflow: 'scroll'}}>
-                                <div id='generalconceptdiv'>
+                                {/* {this.state.moderation.safe <= 0.4 ? 'The image you uploaded is suggestive of something illegal': ''} */}
+                                {/* {this.state.nsfw.sfw <= 0.5 ? 'The image you uploaded is suggestive of something illegal': ''} */}
+                                <div id='generalconceptdiv' className="">
                                 {/* progress bar here  loop through general concepts object*/}
                                 {
                                     Object.entries(generalConcepts).map((item, i) => (
@@ -130,6 +128,29 @@ export default class DropFile extends Component {
                                     ))
                                 }
                                 </div>
+                            </Col>
+                            <Col md="9" className="h-100 p-0">
+                                {imgSrc !== null ? <img src={imgSrc} className="w-100 h-25 mb-3 border-bottom" alt=""/> : ''}
+                                {medium.is_approved 
+                                ? <div className="p-3">
+                                    <p>Your Ad has been <span className="text-success">approved</span></p>
+                                    <h5>
+                                        <Link to={'/bid'} className="">
+                                            Start bidding now !
+                                        </Link> 
+                                    </h5>
+                                </div>  
+                                : <div className="p-3">
+                                    <h4>Your Ad has been <span className="text-danger">rejected</span></h4>
+                                    <h5>Reason:</h5>
+                                    <p>{this.state.moderation.safe <= 0.4 ? 'The image you uploaded is suggestive of something illegal': ''}</p>
+                                    <h5>
+                                        <Link to={'/new'} className="">
+                                            New Ad
+                                        </Link> 
+                                    </h5>
+                                </div> 
+                                }
                             </Col>
                         </Row>
                     </Container>
