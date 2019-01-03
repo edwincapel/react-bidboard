@@ -50,7 +50,8 @@ export default class SignUp extends Component {
             })
         })
         .catch(catcherror => {
-            console.log(catcherror)
+            console.log(catcherror.response)
+            this.setState({errors: catcherror.response.data.message, hasError: true})
         });    
     }
 
@@ -174,7 +175,7 @@ export default class SignUp extends Component {
                                     <h6>
                                     {this.state.hasError === true ? this.state.errors.map((errors,index) =>
                                     <li key = {index}>{errors}</li>) 
-                                    : this.state.message}
+                                    : ''}
                                     </h6>
                                 </div>
                                 <div className="mt-auto mx-auto mb-3">

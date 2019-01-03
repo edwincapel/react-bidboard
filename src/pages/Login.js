@@ -14,7 +14,8 @@ export default class Login extends Component {
         this.state = {
             emailValue: "",
             passwordValue: "",
-            isLoading: false
+            isLoading: false,
+            hasError:false,
         }
     }
 
@@ -37,6 +38,7 @@ export default class Login extends Component {
               })
               .catch(error => {
                console.log(error)
+               this.setState({hasError:true})
               });
         } else {
             this.setState({
@@ -104,6 +106,7 @@ export default class Login extends Component {
                                         </div>
                                     </FormGroup>
                                 </Form>
+                                {this.state.hasError === true ? 'The Email and Password doesn\'t match' : ''}
                                 <div className="mt-auto mx-auto mb-3">
                                     <small className="text-muted">
                                         Don't have an account yet? Sign up&nbsp;
