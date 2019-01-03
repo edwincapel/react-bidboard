@@ -115,8 +115,13 @@ export default class DropFile extends Component {
                             <Col md="6" className="h-100 p-0">
                                 {imgSrc !== null ? <img src={imgSrc} className="w-100 h-25 " alt=""/> : ''}
                             </Col>
-                            <Col md="6" className="h-100 p-0">
+                            <Col md="6" className="h-100 p-0" style={{overflow: 'scroll'}}>
                                 {/* progress bar here  loop through general concepts object*/}
+                                {
+                                    Object.entries(generalConcepts).map((item, i) => (
+                                        <ProgressBar key={i} item={item} />
+                                    ))
+                                }
                             </Col>
                         </Row>
                     </Container>
