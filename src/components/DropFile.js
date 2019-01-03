@@ -1,13 +1,20 @@
-import React,{Component} from 'react'
+import React,{Component,Fragment} from 'react'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
-import {Button,Form,FormGroup,Input,Table} from 'reactstrap'
-
+import {Button,Form,FormGroup,Input,Table,Row,Col,Container} from 'reactstrap'
+import Loader from '../images/loader.gif'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons'
+import ProgressBar from './ProgressBar';
 
 export default class DropFile extends Component {
     constructor() {
         super()
         this.state = {
+            medium: null,
+            generalConcepts: null,
+            isLoading:false,
+            success: false,
             description: "",
             campaign_name: "",
             file: [],
@@ -28,28 +35,42 @@ export default class DropFile extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
+        this.setState({
+            isLoading:true
+        })
+        let formData = new FormData()
+        formData.set('campaign_name', this.state.campaign_name)
+        formData.set('description', this.state.description)
+        formData.set('user_id', this.state.currentUser.id)
+        formData.append('user_media', this.state.file[0])
+        
         axios({
             method: 'post',
             url: 'http://127.0.0.1:5000/api/v1/media/upload',
             headers: {
-                'content-type': 'multipart/form-data',
-                'authorization': `Bearer ${localStorage.jwt}`
+                "Content-Type": 'multipart/form-data'
             },
-            data: {
-                "campaign_name": this.state.campaign_name,
-                "description": this.state.description,
-                "user_media": this.state.file[0],
-                'user_id': this.state.currentUser.id
-            }
+            data: formData
           })
         .then( response => {
-            // console.log(response)
-            console.log(response);
+            console.log(response.data.medium.concepts)
+            if(response.status === 201){
+                console.log("success");
+                this.setState({
+                    isLoading:false,
+                    success: true,
+                    medium: response.data.medium,
+                    generalConcepts: response.data.medium.concepts.general,
+                    // illegal: response.data.medium.concepts.illegal,
+                    // moderation: response.data.medium.concepts.moderation,
+                    // "nsfw-v1.0": response.data.medium.concepts[3]
+                })
+            }
+            console.log(response.data.medium.concepts.general);
             
         })
         .catch(error => {
             console.log(error);
-            
         }); 
     }
     
@@ -76,68 +97,97 @@ export default class DropFile extends Component {
       onCancel = () => {
         this.setState({
           file: [],
-          imgSrc: null
+          imgSrc: null,
+          success:false
         });
       }
 
+      
+
     render() {
-        const {imgSrc,fileName,fileSize} = this.state
+        const {imgSrc,fileName,fileSize,success,isLoading,generalConcepts} = this.state
         
-        if (this.state.file.length > 0) {
+        if (this.state.file.length > 0 && success){
             return(
-                <div id="preview" className="w-100">
-                    {imgSrc !== null ? <img src={imgSrc} className="w-100" height="244px" alt=""/> : ''}
-
-                    <Table className="w-50 mt-5 border ml-5">
-                        <thead>
-                        <tr>
-                            <th className="border-right">#</th>
-                            <th className="border-right">File Name</th>
-                            <th className="border-right">File Size</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row" className="border-right">1</th>
-                            <td className="border-right">{fileName}</td>
-                            <td className="border-right">{fileSize} mb</td>
-                        </tr>
-                        </tbody>
-                    </Table>
-
-                    <Form className="w-100 p-5" onSubmit={this.handleSubmit}>
-                        <FormGroup>
-                            <Input 
-                                className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
-                                name = "campaign_name" 
-                                placeholder ="Campaign Name"
-                                value={this.state.campaign_name}
-                                onChange={this.handleCampaignNameChange}
-                            />
-                            <Input 
-                                className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
-                                name = "description" 
-                                placeholder ="description"
-                                value={this.state.description}
-                                onChange={this.handleDescriptionChange}
-                            />
-                            <div className="d-flex flex-row mt-3 ml-1">
-                                <Button className="btn btn-dark" value="Submit">
-                                    Sumbit
-                                </Button>
-                                <Button className="btn btn-danger ml-1" onClick={this.onCancel}>
-                                    Cancel
-                                </Button>
-                            </div>
-                        </FormGroup>
-                    </Form>
+                <div id="success-preview" className="w-100 h-100 p-5">
+                    <Container className="w-100 h-100" fluid>
+                        <Row>
+                            <Col md="6" className="h-100 p-0">
+                                {imgSrc !== null ? <img src={imgSrc} className="w-100 h-25 " alt=""/> : ''}
+                            </Col>
+                            <Col md="6" className="h-100 p-0">
+                                {/* progress bar here  loop through general concepts object*/}
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
+            )
+        }
+        else if (this.state.file.length > 0 && success === false) {
+            return(
+                <Fragment>
+                    {isLoading
+                    ? <Fragment>
+                        <div id="loading" className="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+                            <img src={Loader} alt=""/>
+                        </div>
+                    </Fragment> 
+                    : <Fragment>
+                        <div id="preview" className="w-100 h-100">
+                            {imgSrc !== null ? <img src={imgSrc} className="w-100" height="244px" alt=""/> : ''}
 
+                            <Table className="w-50 mt-5 border ml-5">
+                                <thead>
+                                <tr>
+                                    <th className="border-right">#</th>
+                                    <th className="border-right">File Name</th>
+                                    <th className="border-right">File Size</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row" className="border-right">1</th>
+                                    <td className="border-right">{fileName}</td>
+                                    <td className="border-right">{fileSize} mb</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+
+                            <Form className="w-100 p-5" onSubmit={this.handleSubmit}>
+                                <FormGroup>
+                                    <Input 
+                                        className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
+                                        name = "campaign_name" 
+                                        placeholder ="Campaign Name"
+                                        value={this.state.campaign_name}
+                                        onChange={this.handleCampaignNameChange}
+                                    />
+                                    <Input 
+                                        className = "form-control border-top-0 border-left-0 border-right-0 bg-transparent" 
+                                        name = "description" 
+                                        placeholder ="description"
+                                        value={this.state.description}
+                                        onChange={this.handleDescriptionChange}
+                                    />
+                                    <div className="d-flex flex-row mt-3 ml-1">
+                                        <Button className="btn btn-dark" value="Submit">
+                                            Sumbit
+                                        </Button>
+                                        <Button className="btn btn-danger ml-1" onClick={this.onCancel}>
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </FormGroup>
+                            </Form>
+                        </div>
+                    </Fragment>
+                    }
+                </Fragment>
             )
         }
         else{
             return (
-                <section id="dropzone" className="w-100 h-100">
+                <section id="dropzone" className="w-100 h-100 p-5">
                     <Dropzone
                     onDrop={this.onDrop.bind(this)}
                     onFileDialogCancel={this.onCancel.bind(this)}
@@ -145,13 +195,11 @@ export default class DropFile extends Component {
                     >
                     {({getRootProps, getInputProps}) => (
                         <div {...getRootProps()}
-                            className="border w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+                            className="dropzone w-100 h-100 d-flex flex-column justify-content-center align-items-center"
                         >
                             <p>Drop files here, or click to select files</p>
                             <input {...getInputProps()} />
-                            <Button color="primary">
-                                Upload
-                            </Button>
+                                <FontAwesomeIcon className="fa-2x" icon={faChevronCircleUp}/>
                         </div>
                     )}
                     </Dropzone>
