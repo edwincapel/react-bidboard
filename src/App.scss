@@ -179,8 +179,9 @@ html,body,#root,.content{
   }
 
 #generalconceptdiv{
-  max-height:500px;
-  overflow-y:scroll;}  
+  max-height:100%;
+  overflow-y:scroll;
+}  
   
 #billboardcontainer{
   max-height:520px;
@@ -196,5 +197,24 @@ html,body,#root,.content{
 
   
   .bil-list{
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(182, 182, 182, 0.05);
+  }
+
+  .react-datepicker-wrapper,.react-datepicker__input-container, .react-datepicker__input-container input{
+    width: 100%;
+    text-align: center;
+  }
+
+  .active{
+    background: linear-gradient(87deg,#5e72e4 0,#825ee4 100%)!important;
+  }
+
+  .active Form{
+    background-color: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(182, 182, 182, 0.05);
+  }
+
+  .shadow-me {
+    background-color: #fff;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(182, 182, 182, 0.05);
   }
