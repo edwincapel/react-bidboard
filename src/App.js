@@ -3,6 +3,7 @@ import './App.scss';
 import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
+import Bid from './pages/Bid'
 import NewAdvertisement from './pages/NewAdvertisement';
 import {Route, Switch} from 'react-router-dom'
 import Billboards from './components/Billboards';
@@ -56,17 +57,17 @@ class App extends Component {
                       }
               }
             />
-            <Route path="/billboards" 
+            <Route path="/bid" 
               component = { props => 
                       {
                         return (
-                          <Billboards
+                          <Bid 
                             {...props}
                           />
                         )
                       }
               }
-            />             
+            />          
             <Route path="/" 
               component = { props => 
                       {

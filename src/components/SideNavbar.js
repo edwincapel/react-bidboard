@@ -23,7 +23,7 @@ export default class SideNavbar extends Component {
               </Link>
             </NavItem>
             <NavItem>
-              <Link to={'/new'} className="nav-link">
+              <Link to={'/bid'} className="nav-link">
                 <span data-feather="home"></span>
                   Bid<span className="sr-only">(current)
                 </span>
