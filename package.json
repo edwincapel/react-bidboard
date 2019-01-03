@@ -11,6 +11,8 @@
     "email-validator": "^2.0.4",
     "i": "^0.3.6",
     "jwt-decode": "^2.2.0",
+    "moment": "^2.23.0",
+    "momentjs": "^2.0.0",
     "node-sass": "^4.11.0",
     "npm": "^6.5.0",
     "react": "^16.7.0",

@@ -182,3 +182,9 @@ html,body,#root,.content{
   max-height:500px;
   overflow-y:scroll;}  
   
+#billboardcontainer{
+  max-height:500px;
+  overflow-y:scroll;
+  position:fixed;
+  right:0px;
+}
