@@ -62,14 +62,14 @@ export default class Bid extends Component {
                         <Container fluid className="h-100">
                             <Row className="h-100">
                                 <SideNavbar logout={this.logout}/>
-                                <Col md={{ size: 3, offset: 2}} className="bil-list p-2" style={fixed}>
+                                <Col md={{ size: 4, offset: 2}} className="bil-list p-2" style={fixed}>
                                 {
                                         billboards.map((item, i) => (
                                             <BidItem key={i} billboard={item} handleSelected={this.handleSelected} />
                                         ))
                                 }
                                 </Col>
-                                <Col md="7" className="w-100 h-100 p-2">
+                                <Col md="6" className="w-100 h-100 p-2">
                                     <SelectedBillboard selected={selected}/>
                                 </Col>
                                 
