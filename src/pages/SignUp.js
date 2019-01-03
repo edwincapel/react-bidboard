@@ -50,9 +50,7 @@ export default class SignUp extends Component {
             })
         })
         .catch(catcherror => {
-            const {response} = catcherror
-            
-            this.setState({hasError: true,errors: response.data.message })
+            console.log(catcherror)
         });    
     }
 
