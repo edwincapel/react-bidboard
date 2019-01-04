@@ -75,7 +75,7 @@ export default class SelectedBillboard extends Component {
             }
         })
             .then(({ data }) => {
-                console.log(data.all_ads);
+                // console.log(data.all_ads);
                 let price = this.props.selected.base_price
                 if (this.props.selected.bids[0]) {
                     let bidAmounts = []
