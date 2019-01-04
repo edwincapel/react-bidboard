@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import axios from 'axios';
-import {Container,Col,Row,Form,FormGroup,Input,Button} from 'reactstrap'
+import {Alert,Container,Col,Row,Form,FormGroup,Input,Button} from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVrCardboard } from '@fortawesome/free-solid-svg-icons'
 
@@ -174,7 +174,7 @@ export default class SignUp extends Component {
                                 <div>
                                     <h6>
                                     {this.state.hasError === true ? this.state.errors.map((errors,index) =>
-                                    <li key = {index}>{errors}</li>) 
+                                    <Alert color='danger' key = {index}>{errors}</Alert>) 
                                     : ''}
                                     </h6>
                                 </div>
