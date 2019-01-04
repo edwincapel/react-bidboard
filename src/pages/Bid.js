@@ -46,7 +46,8 @@ export default class Bid extends Component {
     }
 
     handleSelected = (billboard) => {
-
+        console.log(billboard);
+        
         this.setState({
             selected: billboard
         })
