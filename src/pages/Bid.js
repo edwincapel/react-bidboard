@@ -1,7 +1,7 @@
-import React, {Component,Fragment} from 'react'
-import {Container,Row,Col} from 'reactstrap'
+import React, { Component, Fragment } from 'react'
+import { Container, Row, Col } from 'reactstrap'
 import SideNavbar from '../components/SideNavbar'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import BidItem from '../components/BidItem';
 import Loader from '../images/loader.gif'
@@ -17,7 +17,7 @@ export default class Bid extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            billboards:null,
+            billboards: null,
             selected: null,
         }
     }
@@ -28,69 +28,68 @@ export default class Bid extends Component {
         this.forceUpdate()
     }
 
-    componentDidMount(){
+    componentDidMount() {
         axios.get('http://localhost:5000/api/v1/billboards/')
-        .then(({data}) => {
-            console.log(data.all_billboards);
-            
-          this.setState(
-            {
-                billboards: data.all_billboards,
-                selected: data.all_billboards[0]
+            .then(({ data }) => {
+                console.log(data.all_billboards);
+
+                this.setState(
+                    {
+                        billboards: data.all_billboards,
+                        selected: data.all_billboards[0]
+                    })
+
             })
-      
-        })
-        .catch(error => {
-          console.log('ERROR: ', error); 
-        })
+            .catch(error => {
+                console.log('ERROR: ', error);
+            })
     }
 
     handleSelected = (billboard) => {
-        console.log(billboard);
-        
+
         this.setState({
             selected: billboard
         })
     }
 
-    render(){
-        const {billboards,selected} = this.state
-        
+    render() {
+        const { billboards, selected } = this.state
+
         if (localStorage.getItem('jwt')) {
             if (billboards !== null) {
-                return(    
+                return (
                     // Dashboard SECTION
-                    <section className="h-100" id="dashboard"> 
+                    <section className="h-100" id="dashboard">
                         <Container fluid className="h-100">
                             <Row className="h-100">
-                                <SideNavbar logout={this.logout}/>
-                                <Col md={{ size: 4, offset: 2}} className="bil-list p-2" style={fixed}>
-                                {
+                                <SideNavbar logout={this.logout} />
+                                <Col md={{ size: 4, offset: 2 }} className="bil-list p-2" style={fixed}>
+                                    {
                                         billboards.map((item, i) => (
-                                            <BidItem key={i} billboard={item} handleSelected={this.handleSelected}/>
+                                            <BidItem key={i} billboard={item} handleSelected={this.handleSelected} />
                                         ))
-                                }
+                                    }
                                 </Col>
                                 <Col md="6" className="w-100 h-100 p-0">
-                                    <SelectedBillboard selected={selected}/>
+                                    <SelectedBillboard selected={selected} />
                                 </Col>
-                                
+
                             </Row>
                         </Container>
                     </section>
                 )
             } else {
-                return(
+                return (
                     <Fragment>
                         <div id="loading" className="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                            <img src={Loader} alt=""/>
+                            <img src={Loader} alt="" />
                         </div>
-                    </Fragment> 
+                    </Fragment>
                 )
             }
         }
-        else{
-            return <Redirect to='/login'/>;
+        else {
+            return <Redirect to='/login' />;
         }
 
     }
