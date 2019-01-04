@@ -124,7 +124,7 @@ export default class DropFile extends Component {
 
                                 {/* {this.state.moderation.safe <= 0.4 ? 'The image you uploaded is suggestive of something illegal': ''} */}
                                 {/* {this.state.nsfw.sfw <= 0.5 ? 'The image you uploaded is suggestive of something illegal': ''} */}
-                                <div id='generalconceptdiv' className="">
+                                <div id='generalconceptdiv' className="h-100">
                                     {/* progress bar here  loop through general concepts object*/}
                                     {
                                         Object.entries(generalConcepts).map((item, i) => (

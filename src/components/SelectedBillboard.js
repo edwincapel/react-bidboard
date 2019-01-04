@@ -167,14 +167,12 @@ export default class SelectedBillboard extends Component {
             total: parseInt(price)
         });
     }
-
     handleCampaign = (e) => {
         const obj = (this.state.medium).find(o => o.campaign_name === e.target.value)
         this.setState({ selected_campaign: obj })
         console.log(obj);
         
     }
-
 
     render() {
         const { selected, handleSelected } = this.props
@@ -187,6 +185,7 @@ export default class SelectedBillboard extends Component {
 
                     <Form className="w-75 p-3" onSubmit={this.handleSubmit}>
                         <FormGroup>
+                        <h4>{selected.location}</h4>
                             <Label for="exampleSelect">Choose Campaign</Label>
                             <Input type="select" name="select" id="exampleSelect" onChange={this.handleCampaign}>
                                 {
