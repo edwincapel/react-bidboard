@@ -64,41 +64,25 @@ export default class SelectedBillboard extends Component {
             })
     }
 
-    componentDidUpdate = () => {
-        this.generate_client_token()
-        axios({
-            method: 'get',
-            url: 'http://127.0.0.1:5000/api/v1/media/me',
-            headers: {
-                'content-type': 'multipart/form-data',
-                'authorization': `Bearer ${localStorage.jwt}`
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.selected != this.props.selected) {
+            let price = this.props.selected.base_price
+            if (this.props.selected.bids[0]) {
+                let bidAmounts = []
+                this.props.selected.bids.forEach(bid => {
+                    bidAmounts.push(bid.amount)
+                });
+                price = Math.max(...bidAmounts) * 1.1
             }
-        })
-            .then(({ data }) => {
-                console.log(data.all_ads);
-                let price = this.props.selected.base_price
-                if (this.props.selected.bids[0]) {
-                    let bidAmounts = []
-                    this.props.selected.bids.forEach(bid => {
-                        bidAmounts.push(bid.amount)
-                    });
-                    price = Math.max(...bidAmounts) * 1.1
-                }
-                else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
-                    price = price * 1.25
-                }
-
-                this.setState(
-                    {
-                        medium: data.all_ads,
-                        selected_campaign: data.all_ads[0],
-                        total: parseInt(price)
-                    })
-
-            })
-            .catch(error => {
-                console.log('ERROR: ', error);
-            })
+            else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
+                price = price * 1.25
+            }
+    
+            this.setState(
+                {
+                    total: parseInt(price)
+                })
+        }
 
     }
 
@@ -187,6 +171,8 @@ export default class SelectedBillboard extends Component {
     handleCampaign = (e) => {
         const obj = (this.state.medium).find(o => o.campaign_name === e.target.value)
         this.setState({ selected_campaign: obj })
+        console.log(obj);
+        
     }
 
 
