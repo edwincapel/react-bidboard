@@ -21,10 +21,11 @@ export default class SelectedBillboard extends Component {
         amount: null,
         medium: null,
         total: null,
-        startDate: new Date(),
+        startDate: (new Date(new Date().getTime() +86400000 *8)),
         selected_campaign: null,
         modal: false,
-        maxAmount: 0
+        maxBid: 0,
+        newBid: 0
     }
 
     componentDidMount = () => {
@@ -39,14 +40,20 @@ export default class SelectedBillboard extends Component {
         })
             .then(({ data }) => {
                 console.log(data.all_ads);
-                let price = this.props.selected.base_price
-                if (this.props.selected.bids[0]) {
-                    let bidAmounts = []
-                    this.props.selected.bids.forEach(bid => {
-                        bidAmounts.push(bid.amount)
-                    });
-                    price = Math.max(...bidAmounts) * 1.1
-                }
+                    let price = this.props.selected.base_price
+                    let maxBid
+                    let newBid
+                    if (this.props.selected.bids[0]) {
+                        let bidAmounts = []
+                        this.props.selected.bids.forEach(bid =>{
+                            if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
+                                bidAmounts.push(bid.amount)
+                            maxBid = Math.max(...bidAmounts)
+                            newBid = Math.max(...bidAmounts) * 1.1
+                            debugger
+                            }
+                        })
+                    }
                 else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
                     price = price * 1.25
                 }
@@ -55,7 +62,9 @@ export default class SelectedBillboard extends Component {
                     {
                         medium: data.all_ads,
                         selected_campaign: data.all_ads[0],
-                        total: parseInt(price)
+                        total: parseInt(price),
+                        maxBid: maxBid,
+                        newBid: parseInt(newBid)
                     })
 
             })
@@ -67,12 +76,18 @@ export default class SelectedBillboard extends Component {
     componentDidUpdate = (prevProps) => {
         if (prevProps.selected != this.props.selected) {
             let price = this.props.selected.base_price
+            let maxBid
+            let newBid
             if (this.props.selected.bids[0]) {
                 let bidAmounts = []
-                this.props.selected.bids.forEach(bid => {
-                    bidAmounts.push(bid.amount)
-                });
-                price = Math.max(...bidAmounts) * 1.1
+                this.props.selected.bids.forEach(bid =>{
+                    if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
+                        bidAmounts.push(bid.amount)
+                    maxBid = Math.max(...bidAmounts)
+                    newBid = Math.max(...bidAmounts) * 1.1
+                    debugger
+                    }
+                })
             }
             else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
                 price = price * 1.25
@@ -80,7 +95,9 @@ export default class SelectedBillboard extends Component {
     
             this.setState(
                 {
-                    total: parseInt(price)
+                    total: parseInt(price),
+                    maxBid: maxBid,
+                    newBid: parseInt(newBid)
                 })
         }
 
@@ -108,10 +125,20 @@ export default class SelectedBillboard extends Component {
                 console.log(error);
             })
     };
+    payment = () => {
+        const {total,newBid} = this.state
 
+        if (newBid > total) {
+            return newBid 
+        } else {
+            return total
+       }
+    }
 
     submit_bid = async () => {
+        const {total,newBid} = this.state
         const nonce = await this.instance.requestPaymentMethod()
+        
         axios({
             method: 'post',
             url: 'http://127.0.0.1:5000/api/v1/bids/new_bid',
@@ -120,11 +147,11 @@ export default class SelectedBillboard extends Component {
             },
             data: {
                 user_id: this.state.currentUser.id,
-                amount: this.state.total,
+                amount: this.payment(),
                 nonce: nonce.nonce,
                 billboard_id: this.props.selected.id,
                 medium_id: this.state.selected_campaign.id,
-                booking_at: (((this.state.startDate).getTime()) / 1000),
+                booking_at: (((this.state.startDate).getTime())/1000),
             }
         })
 
@@ -151,20 +178,28 @@ export default class SelectedBillboard extends Component {
 
     handleChange = (date) => {
         let price = this.props.selected.base_price
+        let maxBid
+        let newBid
         if (this.props.selected.bids[0]) {
             let bidAmounts = []
-            this.props.selected.bids.forEach(bid => {
-                bidAmounts.push(bid.amount)
-            });
-            price = Math.max(...bidAmounts) * 1.1
+            this.props.selected.bids.forEach(bid =>{
+                if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
+                    bidAmounts.push(bid.amount)
+                maxBid = Math.max(...bidAmounts)
+                newBid = Math.max(...bidAmounts) * 1.1
+                debugger
+                }
+            })
         }
         else if ((date.getHours() >= 7 && date.getHours() <= 9) || (date.getHours() >= 16 && date.getHours() <= 21)) {
             price = price * 1.25
         }
-
+        console.log(date.getTime())
         this.setState({
             startDate: date,
-            total: parseInt(price)
+            total: parseInt(price),
+            maxBid: maxBid,
+            newBid: parseInt(newBid)
         });
     }
     handleCampaign = (e) => {
@@ -174,10 +209,27 @@ export default class SelectedBillboard extends Component {
         
     }
 
+    // checkBids = () => {
+    //     let bidAmounts=[]
+    //     if (this.props.selected.bids[0]) {
+    //         this.props.selected.bids.forEach(bid =>{
+                // if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
+    //                 bidAmounts.push(bid.amount)
+    //                 console.log(bid.amount)
+                    
+    //             }
+    //             let maxBid = Math.max(...bidAmounts) * 1.1
+    //             return maxBid
+    //         })
+    //     }
+    // }
     render() {
         const { selected, handleSelected } = this.props
-        const { medium, total } = this.state
+        const { medium, total, maxBid, newBid } = this.state
         if (selected.bids[0]) { console.log(selected.bids[0].amount) }
+        // const maxBid = this.checkBids()
+        console.log(maxBid)
+
         if (!medium) return <h1>Wait lah</h1>
         return (
             <>
@@ -208,22 +260,22 @@ export default class SelectedBillboard extends Component {
                                     setHours(setMinutes(new Date(), 5), 12),
                                     setHours(setMinutes(new Date(), 59), 23)
                                 ]}
-                                dateFormat="MMMM d, yyyy h:mm aa"
+                                dateFormat="MMMM d, yyyy h aa"
                             />
                             <div className="w-100 d-flex mt-3 border-top border-bottom p-3">
                                 <p className="mr-auto">Rate for this hour</p>
-                                <p className="ml-auto">{total} MYR</p>
+                                <p className="ml-auto">{this.payment()} MYR</p>
                             </div>
                             <div className="w-100 d-flex mt-3 border-top border-bottom p-3">
-                                <p className="mr-auto">Exsisting Bids</p>
+                                <p className="mr-auto">Highest Bid</p>
                                 {
-                                    selected.bids[0] ? selected.bids.map((bid, index) =>
-                                        <p className="ml-auto" key={index}>{bid.amount} MYR</p>) : 'This is the first bid!'
+                                    maxBid ? 
+                                        <p className="ml-auto">{maxBid} MYR</p> : 'This is the first bid!'
                                 }
                             </div>
                             <br />
                             {
-                                selected.bids[0] ? <Alert color="info">A bid already exists for this billboard and time slot. Please bid a higher booking fee or choose a different billboard/time slot</Alert> : ""
+                                maxBid ? <Alert color="info">A bid already exists for this billboard and time slot. Please bid a higher booking fee or choose a different billboard/time slot</Alert> : ""
                             }
                             <div className="d-flex flex-row mt-3 ml-1 w-100">
                                 <Button className="btn btn-dark ml-auto" onClick={this.toggle}>
@@ -238,7 +290,7 @@ export default class SelectedBillboard extends Component {
                     <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                         <ModalHeader toggle={this.toggle}>Enter your payment details</ModalHeader>
                         <ModalBody>
-                            <Label>Bid Payment {this.state.total} MYR</Label>
+                            <Label>Bid Payment {this.payment()} MYR</Label>
                             <div>
                                 <DropIn
                                     options={{ authorization: this.state.clientToken }}
