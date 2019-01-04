@@ -89,7 +89,7 @@ export default class DropFile extends Component {
 
         const reader = new FileReader()
         reader.addEventListener("load",() => {
-            console.log(reader.result);
+            // console.log(reader.result);
             this.setState({
                 file,
                 imgSrc: reader.result
