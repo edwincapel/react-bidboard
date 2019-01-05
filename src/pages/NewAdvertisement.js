@@ -9,7 +9,8 @@ export default class NewAdvertisement extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            currentUser: JSON.parse(localStorage.getItem('currentUser'))
+            currentUser: JSON.parse(localStorage.getItem('currentUser')),
+            currentUrl: this.props.match.path
         }
     }
 
@@ -20,14 +21,14 @@ export default class NewAdvertisement extends Component {
     }
 
     render(){
-        const {currentUser} = this.state
+        const {currentUser,currentUrl} = this.state
         
         if (localStorage.getItem('jwt')) {
             return(
                 <section className="h-100" id="dashboard"> 
                     <Container fluid className="h-100">
                         <Row className="h-100">
-                            <SideNavbar logout={this.logout}/>
+                            <SideNavbar currentUrl={currentUrl} logout={this.logout}/>
                             <NewAd/>
                         </Row>
                     </Container>
