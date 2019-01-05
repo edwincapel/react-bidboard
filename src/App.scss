@@ -218,3 +218,15 @@ html,body,#root,.content{
     background-color: #fff;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(182, 182, 182, 0.05);
   }
+
+  .bg-bidItem{
+    background-color: rgba(52, 152, 219,0.1);
+  }
+
+  .nav-item:hover{
+    background-color: rgba(52, 152, 219,0.1);
+  }
+
+  .bidItem:hover{
+    background-color: rgba(189, 195, 199,0.1);
+  }

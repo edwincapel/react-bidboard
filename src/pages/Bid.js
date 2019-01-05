@@ -19,6 +19,7 @@ export default class Bid extends Component {
         this.state = {
             billboards: null,
             selected: null,
+            currentUrl: this.props.match.path
         }
     }
 
@@ -54,7 +55,7 @@ export default class Bid extends Component {
     }
 
     render() {
-        const { billboards, selected } = this.state
+        const { billboards, selected, currentUrl } = this.state
 
         if (localStorage.getItem('jwt')) {
             if (billboards !== null) {
@@ -63,11 +64,11 @@ export default class Bid extends Component {
                     <section className="h-100" id="dashboard">
                         <Container fluid className="h-100">
                             <Row className="h-100">
-                                <SideNavbar logout={this.logout} />
-                                <Col md={{ size: 4, offset: 2 }} className="bil-list p-2" style={fixed}>
+                                <SideNavbar currentUrl={currentUrl} logout={this.logout} />
+                                <Col md={{ size: 4, offset: 2 }} className="bil-list p-0" style={fixed}>
                                     {
                                         billboards.map((item, i) => (
-                                            <BidItem key={i} billboard={item} handleSelected={this.handleSelected} />
+                                            <BidItem key={i} billboard={item} selected={selected} handleSelected={this.handleSelected} />
                                         ))
                                     }
                                 </Col>

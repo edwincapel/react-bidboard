@@ -61,7 +61,7 @@ export default class SelectedBillboard extends Component {
                 this.setState(
                     {
                         medium: data.all_ads,
-                        selected_campaign: data.all_ads[0],
+                        selected_campaign: [],
                         total: parseInt(price),
                         maxBid: maxBid,
                         newBid: parseInt(newBid)
@@ -240,9 +240,10 @@ export default class SelectedBillboard extends Component {
                         <h4>{selected.location}</h4>
                             <Label for="exampleSelect">Choose Campaign</Label>
                             <Input type="select" name="select" id="exampleSelect" onChange={this.handleCampaign}>
+                                <option>Select a campaign</option>
                                 {
                                     medium.map((item, i) => (
-                                        <option key={i}>{item.campaign_name}</option>
+                                        item.is_approved ? <option key={i}>{item.campaign_name}</option> : null
                                     ))
                                 }
                             </Input>

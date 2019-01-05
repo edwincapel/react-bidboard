@@ -4,14 +4,13 @@ import {Card,CardTitle,CardText} from 'reactstrap'
 const card = {
     width: "15rem"
 }
-const numberColor = {
-    color: 'green'
-}
 
-const SmallCard = ({title,number}) => (
-    <Card body style={card} className="m-2 d-inline-block">
+
+const SmallCard = ({title,number,color}) => (
+    <Card body className={`m-2 d-inline-block`}>
         <CardTitle>{title}</CardTitle>
-        <CardText style={numberColor}>{number}</CardText>
+        <CardText className={`${color ? 'text-success' : 'text-danger'}`}>{number}</CardText>
     </Card>
 )
 export default SmallCard
+
