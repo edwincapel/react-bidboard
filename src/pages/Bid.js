@@ -46,6 +46,22 @@ export default class Bid extends Component {
             })
     }
 
+    updateParent = () => {
+        axios.get('http://localhost:5000/api/v1/billboards/')
+            .then(({ data }) => {
+                const obj = (this.state.billboards).find(o => o.location === this.state.selected.location)
+                this.setState(
+                    {
+                        billboards: data.all_billboards,
+                        selected: obj
+                    })
+
+            })
+            .catch(error => {
+                console.log('ERROR: ', error);
+            })
+        }
+
     handleSelected = (billboard) => {
         console.log(billboard);
         
@@ -72,8 +88,8 @@ export default class Bid extends Component {
                                         ))
                                     }
                                 </Col>
-                                <Col md="6" className="w-100 h-100 p-0">
-                                    <SelectedBillboard selected={selected} />
+                                <Col md="6" className="w-100 h-100 p-0" >
+                                    <SelectedBillboard updateParent={this.updateParent} selected={selected} />
                                 </Col>
 
                             </Row>

@@ -21,8 +21,9 @@ export default class SelectedBillboard extends Component {
         amount: null,
         medium: null,
         total: null,
-        startDate: (new Date(new Date().getTime() +86400000 *8)),
+        startDate: (new Date((new Date().getTime() +86400000 *8) - (new Date().getMinutes()*60000) - (new Date().getSeconds()*1000))),
         selected_campaign: null,
+        selected_campaign_error: false,
         modal: false,
         maxBid: 0,
         newBid: 0
@@ -39,22 +40,22 @@ export default class SelectedBillboard extends Component {
             }
         })
             .then(({ data }) => {
-                console.log(data.all_ads);
-                    let price = this.props.selected.base_price
-                    let maxBid
-                    let newBid
-                    if (this.props.selected.bids[0]) {
-                        let bidAmounts = []
-                        this.props.selected.bids.forEach(bid =>{
-                            if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
-                                bidAmounts.push(bid.amount)
-                            maxBid = Math.max(...bidAmounts)
-                            newBid = Math.max(...bidAmounts) * 1.1
-                            debugger
-                            }
-                        })
+                const {startDate} = this.state
+            let price = this.props.selected.base_price
+            let maxBid
+            let newBid
+            if (this.props.selected.bids[0]) {
+                let bidAmounts = []
+                this.props.selected.bids.forEach(bid =>{
+                    if (parseInt(bid.booking_at)  ==  parseInt(startDate.getTime()/1000))  {
+                        bidAmounts.push(bid.amount)
                     }
-                else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
+                })
+                maxBid = Math.max(...bidAmounts)
+                newBid = Math.max(...bidAmounts) * 1.1
+            }
+            
+            if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
                     price = price * 1.25
                 }
 
@@ -73,24 +74,28 @@ export default class SelectedBillboard extends Component {
             })
     }
 
-    componentDidUpdate = (prevProps) => {
-        if (prevProps.selected != this.props.selected) {
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevProps.selected != this.props.selected || prevState.startDate != this.state.startDate) {
+            const {startDate} = this.state
             let price = this.props.selected.base_price
             let maxBid
             let newBid
             if (this.props.selected.bids[0]) {
                 let bidAmounts = []
                 this.props.selected.bids.forEach(bid =>{
-                    if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
+                    if (parseInt(bid.booking_at)  ==  parseInt(startDate.getTime()/1000))  {
                         bidAmounts.push(bid.amount)
-                    maxBid = Math.max(...bidAmounts)
-                    newBid = Math.max(...bidAmounts) * 1.1
-                    debugger
                     }
-                })
+            })
+            if (bidAmounts[0]){
+            maxBid = Math.max(...bidAmounts)
+            newBid = Math.max(...bidAmounts) * 1.1
             }
-            else if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
+        }
+        
+        if ((this.state.startDate.getHours() >= 7 && this.state.startDate.getHours() <= 9) || (this.state.startDate.getHours() >= 16 && this.state.startDate.getHours() <= 21)) {
                 price = price * 1.25
+                
             }
     
             this.setState(
@@ -104,10 +109,16 @@ export default class SelectedBillboard extends Component {
     }
 
     toggle = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-
+        if (this.state.selected_campaign.id) {
+            this.setState({
+                modal: !this.state.modal
+            });
+        }
+        else {
+            this.setState({
+                selected_campaign_error: true
+            })
+        }
     }
 
     generate_client_token = () => {
@@ -136,9 +147,8 @@ export default class SelectedBillboard extends Component {
     }
 
     submit_bid = async () => {
-        const {total,newBid} = this.state
         const nonce = await this.instance.requestPaymentMethod()
-        
+        const payment = this.payment()
         axios({
             method: 'post',
             url: 'http://127.0.0.1:5000/api/v1/bids/new_bid',
@@ -147,20 +157,21 @@ export default class SelectedBillboard extends Component {
             },
             data: {
                 user_id: this.state.currentUser.id,
-                amount: this.payment(),
+                amount: payment,
                 nonce: nonce.nonce,
                 billboard_id: this.props.selected.id,
                 medium_id: this.state.selected_campaign.id,
-                booking_at: (((this.state.startDate).getTime())/1000),
+                booking_at: this.state.startDate.getTime()/1000,
             }
         })
 
             .then(response => {
-                console.log(response)
                 setTimeout(() =>
                     this.setState({
-                        modal: false
-                    }), 2000)
+                        modal: false,
+                        maxBid: payment,
+                        newBid: parseInt(payment * 1.1)
+                    }), 500)
             })
             .catch(error => {
                 console.log(error);
@@ -177,65 +188,27 @@ export default class SelectedBillboard extends Component {
     }
 
     handleChange = (date) => {
-        let price = this.props.selected.base_price
-        let maxBid
-        let newBid
-        if (this.props.selected.bids[0]) {
-            let bidAmounts = []
-            this.props.selected.bids.forEach(bid =>{
-                if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
-                    bidAmounts.push(bid.amount)
-                maxBid = Math.max(...bidAmounts)
-                newBid = Math.max(...bidAmounts) * 1.1
-                debugger
-                }
-            })
-        }
-        else if ((date.getHours() >= 7 && date.getHours() <= 9) || (date.getHours() >= 16 && date.getHours() <= 21)) {
-            price = price * 1.25
-        }
-        console.log(date.getTime())
+        this.props.updateParent()
         this.setState({
             startDate: date,
-            total: parseInt(price),
-            maxBid: maxBid,
-            newBid: parseInt(newBid)
         });
     }
     handleCampaign = (e) => {
         const obj = (this.state.medium).find(o => o.campaign_name === e.target.value)
-        this.setState({ selected_campaign: obj })
-        console.log(obj);
-        
+        if (obj) { 
+            this.setState({ selected_campaign: obj, selected_campaign_error: false })
+        }
     }
 
-    // checkBids = () => {
-    //     let bidAmounts=[]
-    //     if (this.props.selected.bids[0]) {
-    //         this.props.selected.bids.forEach(bid =>{
-                // if (parseInt(bid.booking_at)  ===  parseInt(this.state.startDate.getTime()/1000))  {
-    //                 bidAmounts.push(bid.amount)
-    //                 console.log(bid.amount)
-                    
-    //             }
-    //             let maxBid = Math.max(...bidAmounts) * 1.1
-    //             return maxBid
-    //         })
-    //     }
-    // }
     render() {
         const { selected, handleSelected } = this.props
-        const { medium, total, maxBid, newBid } = this.state
-        if (selected.bids[0]) { console.log(selected.bids[0].amount) }
-        // const maxBid = this.checkBids()
-        console.log(maxBid)
-
-        if (!medium) return <h1>Wait lah</h1>
+        const { medium, maxBid,selected_campaign_error } = this.state
+        if (!medium) return <h1>Loading...</h1>
         return (
             <>
-                <div className="w-100 h-100 border-bottom p-0 active d-flex justify-content-center align-items-center" onClick={handleSelected}>
+                <div className="w-100 h-100 border-bottom p-0 active d-flex justify-content-center align-items-center" onClick={handleSelected} >
 
-                    <Form className="w-75 p-3" onSubmit={this.handleSubmit}>
+                    <Form className="w-75 p-3" onSubmit={this.handleSubmit} style={{overflowY:'auto', height:'100vh'}}>
                         <FormGroup>
                         <h4>{selected.location}</h4>
                             <Label for="exampleSelect">Choose Campaign</Label>
@@ -261,8 +234,10 @@ export default class SelectedBillboard extends Component {
                                     setHours(setMinutes(new Date(), 5), 12),
                                     setHours(setMinutes(new Date(), 59), 23)
                                 ]}
-                                dateFormat="MMMM d, yyyy h aa"
+                                dateFormat="MMMM d, yyyy h:mm aa"
                             />
+                            {
+                                (new Date().getTime() + 86400000 * 7) > this.state.startDate.getTime() ? <hr /> :<>
                             <div className="w-100 d-flex mt-3 border-top border-bottom p-3">
                                 <p className="mr-auto">Rate for this hour</p>
                                 <p className="ml-auto">{this.payment()} MYR</p>
@@ -270,19 +245,26 @@ export default class SelectedBillboard extends Component {
                             <div className="w-100 d-flex mt-3 border-top border-bottom p-3">
                                 <p className="mr-auto">Highest Bid</p>
                                 {
-                                    maxBid ? 
+                                    maxBid > 0 ? 
                                         <p className="ml-auto">{maxBid} MYR</p> : 'This is the first bid!'
                                 }
                             </div>
-                            <br />
+                            </>}
                             {
-                                maxBid ? <Alert color="info">A bid already exists for this billboard and time slot. Please bid a higher booking fee or choose a different billboard/time slot</Alert> : ""
+                                (new Date().getTime() + 86400000 * 7) > this.state.startDate.getTime() ?
+                                <Alert color='danger'>The Bidding for this time slot has closed. Please select a time slot that is more than a week away</Alert> 
+                                :
+                                maxBid > 0 ? <Alert color="info">A bid already exists for this billboard and time slot. Please bid a higher booking fee or choose a different billboard/time slot</Alert> : ""
                             }
+                            {
+                                (new Date().getTime() + 86400000 * 7) > this.state.startDate.getTime() ? null :
                             <div className="d-flex flex-row mt-3 ml-1 w-100">
                                 <Button className="btn btn-dark ml-auto" onClick={this.toggle}>
                                     Place Bid
                             </Button>
                             </div>
+                            }
+                            {selected_campaign_error ? <small style={{color:"red"}}>Please select a campaign</small>:""}
                         </FormGroup>
                     </Form>
                 </div>
